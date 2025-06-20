@@ -1,0 +1,20 @@
+.venv/          
+# Виртуальное окружение Python
+__pycache__/    
+# Кэш Python
+*.pyc           
+# Скомпилированные файлы Python
+.vscode/        
+# Настройки VS Code
+.idea/          
+# Настройки PyCharm/IntelliJ
+.DS_Store       
+# Служебный файл macOS
+Thumbs.db       
+# Служебный файл Windows
+*.log           
+# Файлы логов
+*.tmp           
+# Временные файлы
+draft.txt       
+# черновик
