@@ -1,0 +1,63 @@
+{% extends 'base.html' %}
+
+{% block title %}Игровое поле{% endblock %}
+
+{% block app_content %}
+  <div class="game-header">
+        <!-- Счётчик поколений -->
+        <div class="generation-counter">
+            Поколение: {{ game.generation }}
+        </div>
+        <div class="game-status">
+            {% if game_over_message %}
+                <div class="game-over">{{ game_over_message }}</div>
+            {% else %}
+                <div class="game-active">Игра продолжается</div>
+            {% endif %}
+        </div>
+  </div>
+
+  <a href="{{ url_for('index') }}" class="btn btn-warning home">На главную страницу</a>
+  <a href="{{ url_for('live') }}" class="btn btn-info refresh">Создать новую жизнь</a>
+
+  
+
+  <table class="world">
+    {% for i in range(game.get_height()) %}
+      <tr>
+        {% for j in range(game.get_width()) %}
+        <!-- Клетка осталась живой -->
+          {% if game.world[i][j] == 1 %}
+            <td class="cell living-cell"></td>
+            <!-- Умершая клетка -->
+          {% elif game.world[i][j] == 0 and game.old_world[i][j] == 1%}  
+          <!-- Клетка осталась мертвой -->
+          {% else %}
+            <td class="cell"></td>
+          {% endif %}
+        {% endfor %}
+      </tr>
+    {% endfor %}
+  </table>
+
+{% if game_over_message %}
+    <div class="restart-prompt">
+        <a href="{{ url_for('index') }}" class="btn btn-success">
+            Начать новую игру
+        </a>
+    </div>
+    
+{% endif %}
+
+{% endblock %}
+
+{% block scripts %}
+    {{ super() }}
+    {% if not game_over_message %}
+    <script>
+        setInterval(() => {
+            window.location.reload();
+        }, 1000);
+    </script>
+    {% endif %}
+{% endblock %}
