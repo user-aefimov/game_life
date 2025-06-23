@@ -60,24 +60,30 @@ class GameOfLife(metaclass=SingletonMeta):
     def generate_universe(self):
         return [[1 if random.random() > 0.7 else 0 for _ in range(self.__width)] for _ in range(self.__height)]
 
-    @staticmethod
-    def __get_near(universe, pos, system=None):
-        if system is None:
-            system = ((-1, -1), (-1, 0), (-1, 1), (0, -1),
-                      (0, 1), (1, -1), (1, 0), (1, 1))
+@staticmethod
+def __get_near(universe, pos):
+    """Подсчитывает количество живых соседей с учетом торической геометрии"""
+    if not universe or not universe[0]:
+        return 0  # Защита от пустой вселенной
+    
+    height = len(universe)
+    width = len(universe[0])
+    count = 0
+    
+    # Все 8 возможных направлений
+    directions = [(-1,-1), (-1,0), (-1,1),
+                 (0,-1),           (0,1),
+                 (1,-1),  (1,0),   (1,1)]
+    
+    for dx, dy in directions:
+        # Торические координаты (зацикленный мир)
+        x = (pos[0] + dx) % height
+        y = (pos[1] + dy) % width
         
-        height = len(universe)
-        width = len(universe[0]) if height > 0 else 0
-        count = 0
-
-        for dx, dy in system:
-            # Рассчитываем координаты с учетом торической геометрии
-            x = (pos[0] + dx) % height
-            y = (pos[1] + dy) % width
-            if 0 <= x < height and 0 <= y < width:
-                if universe[x][y]:
-                    count += 1
-        return count
+        if universe[x][y]:
+            count += 1
+            
+    return count
     
     def is_game_over(self):
         # Пропускаем проверку на 0-м поколении

@@ -38,8 +38,8 @@ def live():
 @app.route('/reset/')
 def reset():
     game = GameOfLife()
-    game.reset()
-    return render_template("live.html", game=game)
+    game.reset()  # выполняет сброс состояния
+    return redirect(url_for ('live')) # Перенаправляет на live.html
 
 
 if __name__ == '__main__':
