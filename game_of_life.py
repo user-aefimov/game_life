@@ -92,3 +92,9 @@ class GameOfLife(metaclass=SingletonMeta):
             if any(row):  # Если есть хоть одна живая клетка
                 return False
         return True
+    
+    def reset(self):
+        """Сброс игры к начальному состоянию"""
+        self.world = self.generate_universe()
+        self.old_world = copy.deepcopy(self.world)
+        self.generation = 0
