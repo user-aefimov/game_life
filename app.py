@@ -18,14 +18,14 @@ def live():
 
     # Проверяем состояние игры ДО обновления поколения
     game_over_message = game.is_game_over()
-
-    if game_over_message is None and game.generation > 0:
+    # Обновляем только если игра активна
+    if not game_over_message:
+        if game.generation > 0:
         # Генерируем новое поколение
-        game.form_new_generation()
+            game.form_new_generation()
     # Увеличиваем счётчик в представлении
-    game.generation += 1
+        game.generation += 1
     # Проверяем состояние игры ПОСЛЕ обновления
-    if game_over_message is None:
         game_over_message = game.is_game_over()
     # Передаем объект в шаблон
     return render_template("live.html",
