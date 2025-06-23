@@ -30,7 +30,9 @@
           {% if game.world[i][j] == 1 %}
             <td class="cell living-cell"></td>
             <!-- Умершая клетка -->
-          {% elif game.world[i][j] == 0 and game.old_world[i][j] == 1%}  
+          {% elif game.old_world[i][j] == 1%}
+          <!-- Добавлено отображение умерших -->  
+            <td class="cell dead-cell"</td>          
           <!-- Клетка осталась мертвой -->
           {% else %}
             <td class="cell"></td>
