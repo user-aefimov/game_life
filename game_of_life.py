@@ -51,20 +51,32 @@ class GameOfLife(metaclass=SingletonMeta):
                 new_world[i][j] = 0
         self.world = new_world
         
+    def reset(self):
+        """Сброс игры к начальному состоянию"""
+        self.world = self.generate_universe()
+        self.old_world = copy.deepcopy(self.world)
+        self.generation = 0
 
     def generate_universe(self):
-        return [[1 if random.random()>0.7 else 0 for _ in range(self.__width)] for _ in range(self.__height)]
+        return [[1 if random.random() > 0.7 else 0 for _ in range(self.__width)] for _ in range(self.__height)]
 
     @staticmethod
     def __get_near(universe, pos, system=None):
         if system is None:
             system = ((-1, -1), (-1, 0), (-1, 1), (0, -1),
                       (0, 1), (1, -1), (1, 0), (1, 1))
-
+        
+        height = len(universe)
+        width = len(universe[0]) if height > 0 else 0
         count = 0
-        for i in system:
-            if universe[(pos[0] + i[0]) % len(universe)][(pos[1] + i[1]) % len(universe[0])]:
-                count += 1
+
+        for dx, dy in system:
+            # Рассчитываем координаты с учетом торической геометрии
+            x = (pos[0] + dx) % height
+            y = (pos[1] + dy) % width
+            if 0 <= x < height and 0 <= y < width:
+                if universe[x][y]:
+                    count += 1
         return count
     
     def is_game_over(self):
@@ -93,8 +105,3 @@ class GameOfLife(metaclass=SingletonMeta):
                 return False
         return True
     
-    def reset(self):
-        """Сброс игры к начальному состоянию"""
-        self.world = self.generate_universe()
-        self.old_world = copy.deepcopy(self.world)
-        self.generation = 0
