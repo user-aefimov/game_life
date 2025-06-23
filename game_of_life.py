@@ -68,6 +68,9 @@ class GameOfLife(metaclass=SingletonMeta):
         return count
     
     def is_game_over(self):
+        # Пропускаем проверку на 0-м поколении
+        if self.generation == 0:
+            return None
         """Проверяет условия завершения игры"""
         # Условие 1: все клетки мертвы
         if self.is_all_dead():
