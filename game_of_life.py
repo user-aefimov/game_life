@@ -53,7 +53,7 @@ class GameOfLife(metaclass=SingletonMeta):
         
 
     def generate_universe(self):
-        return [[random.randint(0, 1) for _ in range(self.__width)] for _ in range(self.__height)]
+        return [[1 if random.random()>0.7 else 0 for _ in range(self.__width)] for _ in range(self.__height)]
 
     @staticmethod
     def __get_near(universe, pos, system=None):
