@@ -20,6 +20,7 @@ td {
 
 .dead-cell {
     background: darkred;
+    transition: backgroundcolor 0.5s ease-in-out;
 }
 
 .content {
