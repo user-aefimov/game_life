@@ -37,7 +37,7 @@
 ├── README.md        # Этот файл
 ├── app.py           # Главный файл приложения
 ├── requirements.txt # Зависимости
-├── static/
+├── static/css
 │   └── styles.css   # Стили
 └── templates/       # HTML-шаблоны
     ├── base.html
