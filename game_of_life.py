@@ -21,6 +21,7 @@ class GameOfLife(metaclass=SingletonMeta):
         self.world = self.generate_universe()
         self.old_world = copy.deepcopy(self.world)
         self.generation = 0
+        self.state_history = []  # Добавить в инициализатор, истории состояния игры
 # Новые публичные методы
 
     def get_width(self):
@@ -30,6 +31,10 @@ class GameOfLife(metaclass=SingletonMeta):
         return self.__height
 
     def form_new_generation(self):
+        curent_hash = hash(str(self.world))
+        self.state_history.append(curent_hash)
+        if len(self.state_history) > 10:
+            self.state_history.pop(0)
         self.old_world = copy.deepcopy(self.world)
         universe = self.world
         new_world = [[0 for _ in range(self.__width)]
@@ -56,6 +61,7 @@ class GameOfLife(metaclass=SingletonMeta):
         self.world = self.generate_universe()
         self.old_world = copy.deepcopy(self.world)
         self.generation = 0
+        self.state_history = []  # Сбрасываем историю
 
     def generate_universe(self):
         return [[1 if random.random() > 0.7 else 0 for _ in range(self.__width)] for _ in range(self.__height)]
@@ -99,12 +105,23 @@ class GameOfLife(metaclass=SingletonMeta):
         if self.generation > 3 and self.world == self.old_world:
             return "Мир стабилизировался! Игра окончена."
         
-        # Условие 3: достигнуто максимальное число поколений
+        # Условие 3: Проверка периодических состояний (осцилляторов)
+        if self.generation > 10:
+            # Проверяем последние 3 состояния
+            current_hash = hash(str(self.world))
+            if len(self.state_history) > 3 and current_hash in self.state_history[:-2]:
+                return "Обнаружен осциллятор! Игра окончена."
+            
+            # Обновляем историю состояний
+            self.state_history = (self.state_history + [current_hash])[-4:]
+        
+        # Условие 4: достигнуто максимальное число поколений
         if self.generation >= 100:
             return f"Достигнут предел в {self.generation} поколений!"
         
         return None
-    
+
+
     def is_all_dead(self):
         """Проверяет, все ли клетки мертвы"""
         for row in self.world:
