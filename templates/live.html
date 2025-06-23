@@ -18,7 +18,9 @@
   </div>
 
   <a href="{{ url_for('index') }}" class="btn btn-warning home">На главную страницу</a>
-  <a href="{{ url_for('live') }}" class="btn btn-info refresh">Создать новую жизнь</a>
+  <!--  полный цикл перезапуска игры через новый метод сброса -->
+  <a href="{{ url_for('reset') }}" class="btn btn-info refresh">Новая игра</a>
+
 
   
 
@@ -60,6 +62,14 @@
         setInterval(() => {
             window.location.reload();
         }, 1000);
+    </script>
+    <script>
+        // AJAX для перезапуска игры
+        document.querySelector('.refresh').addEventListener('click', async (e) => {
+            e.preventDefault();
+            await fetch("{{ url_for('reset') }}");
+            window.location.href = "{{ url_for('live') }}";
+        });
     </script>
     {% endif %}
 {% endblock %}
