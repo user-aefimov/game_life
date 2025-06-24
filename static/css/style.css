@@ -273,3 +273,28 @@ a, table {
     padding: 5px 10px;
     border-radius: 5px;
 }
+/* ДОБАВИТЬ В КОНЕЦ ФАЙЛА */
+.form-text {
+    display: block;
+    margin-top: 5px;
+    font-size: 0.8em;
+    color: #6c757d;
+}
+
+/* Стиль для невалидных полей */
+input:invalid {
+    border-color: #dc3545 !important;
+    box-shadow: 0 0 0 0.2rem rgba(220, 53, 69, 0.25);
+}
+
+/* Подсветка при ошибке */
+.error-border {
+    border: 2px solid #dc3545;
+    animation: shake 0.5s;
+}
+
+@keyframes shake {
+    0%, 100% {transform: translateX(0);}
+    25% {transform: translateX(-5px);}
+    75% {transform: translateX(5px);}
+}
