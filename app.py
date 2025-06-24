@@ -9,11 +9,11 @@ app = Flask(__name__)
 def index():
     if request.method == 'POST':
         # Получаем параметры из формы
-        width = int(request.form.get('width', 25))
-        height = int(request.form.get('height', 25))
+        width = int(request.form.get('width', 15))
+        height = int(request.form.get('height', 15))
         # Ограничиваем размеры для безопасности
-        width = max(10, min(width, 50))
-        height = max(10, min(height, 50))
+        width = max(10, min(width, 20))
+        height = max(10, min(height, 20))
         # Создаем экземпляр с пользовательскими размерами
         GameOfLife(width, height)
         return redirect(url_for('live'))
