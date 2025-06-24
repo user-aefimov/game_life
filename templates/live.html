@@ -15,6 +15,10 @@
                 <div class="game-active">Игра продолжается</div>
             {% endif %}
         </div>
+        <!-- отображение пользовательского размера -->
+        <div class="world-info">
+            Размер: {{ game.get_width() }}x{{ game.get_height() }}
+        </div>
   </div>
 
   <a href="{{ url_for('index') }}" class="btn btn-warning home">На главную страницу</a>
