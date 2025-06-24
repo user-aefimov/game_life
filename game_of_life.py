@@ -16,8 +16,9 @@ class SingletonMeta(type):
 
 class GameOfLife(metaclass=SingletonMeta):
     def __init__(self, width=20, height=20):
-        self.__width = width
-        self.__height = height
+         # Ограничиваем размеры
+        self.__width = max(10, min(width, 100))
+        self.__height = max(10, min(height, 100))
         self.world = self.generate_universe()
         self.old_world = copy.deepcopy(self.world)
         self.generation = 0
