@@ -1,14 +1,24 @@
-from flask import Flask, render_template, redirect, url_for
+from flask import Flask, render_template, request, redirect, url_for
 from game_of_life import GameOfLife
 
 
 app = Flask(__name__)
 
 
-@app.route('/')
+@app.route('/', methods=['GET', 'POST'])
 def index():
-    # Создаем экземпляр без сохранения в переменную (как требует задание)
-    GameOfLife(25, 25)
+    if request.method == 'POST':
+        # Получаем параметры из формы
+        width = int(request.form.get('width', 25))
+        height = int(request.form.get('height', 25))
+        # Ограничиваем размеры для безопасности
+        width = max(10, min(width, 50))
+        height = max(10, min(height, 50))
+        # Создаем экземпляр с пользовательскими размерами
+        GameOfLife(width, height)
+        return redirect(url_for('live'))
+    
+    # Для GET-запроса просто отображаем форму   
     return render_template("index.html")
 
 
