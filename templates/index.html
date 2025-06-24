@@ -4,13 +4,15 @@
     <h2>Создать новый мир</h2>
     <form method="POST" action="{{ url_for('index') }}">
       <div class="form-group">
-        <label for="width">Ширина мира (10-50)</label>
-        <input type="number" id="width" name="width" min="10" max="50" value="25" required>
+        <label for="width">Ширина мира (10-20)</label>
+        <input type="number" id="width" name="width" min="10" max="20" value="15" required>
+        <small class="form-text text-muted">Диапазон: 10-20 клеток</small>
       </div>
       
       <div class="form-group">
-        <label for="height">Высота мира (10-50)</label>
-        <input type="number" id="height" name="height" min="10" max="50" value="25" required>
+        <label for="height">Высота мира (10-20)</label>
+        <input type="number" id="height" name="height" min="10" max="20" value="15" required>
+        <small class="form-text text-muted">Диапазон: 10-20 клеток</small>
       </div>
 
       <button type="submit" class="btn btn-primary">Создать жизнь</button>
@@ -48,4 +50,58 @@
       border-radius: 4px;
     }
   </style>
+{% endblock %}
+
+{% block scripts %}
+  {{ super() }}
+  <script>
+    document.querySelector('form').addEventListener('submit', function(e) {
+        const widthInput = document.getElementById('width');
+        const heightInput = document.getElementById('height');
+        let isValid = true;
+        
+        // Проверка ширины
+        if (parseInt(widthInput.value) < 10 || parseInt(widthInput.value) > 20) {
+            widthInput.classList.add('error-border');
+            isValid = false;
+        } else {
+            widthInput.classList.remove('error-border');
+        }
+        
+        // Проверка высоты
+        if (parseInt(heightInput.value) < 10 || parseInt(heightInput.value) > 20) {
+            heightInput.classList.add('error-border');
+            isValid = false;
+        } else {
+            heightInput.classList.remove('error-border');
+        }
+        
+        if (!isValid) {
+            e.preventDefault();
+            setTimeout(() => {
+                widthInput.classList.remove('error-border');
+                heightInput.classList.remove('error-border');
+            }, 500);
+            alert('Пожалуйста, введите значения от 10 до 20');
+        }
+    });
+    
+    // Динамическая проверка
+    function validateInput(input) {
+        const value = parseInt(input.value);
+        if (isNaN(value) || value < 10 || value > 20) {
+            input.classList.add('error-border');
+        } else {
+            input.classList.remove('error-border');
+        }
+    }
+    
+    document.getElementById('width').addEventListener('input', function() {
+        validateInput(this);
+    });
+    
+    document.getElementById('height').addEventListener('input', function() {
+        validateInput(this);
+    });
+  </script>
 {% endblock %}
