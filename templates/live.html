@@ -61,19 +61,30 @@
 
 {% block scripts %}
     {{ super() }}
-    {% if not game_over_message %}
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/socket.io/4.0.1/socket.io.js"></script>
     <script>
-        setInterval(() => {
-            window.location.reload();
-        }, 1000);
-    </script>
-    <script>
-        // AJAX для перезапуска игры
-        document.querySelector('.refresh').addEventListener('click', async (e) => {
-            e.preventDefault();
-            await fetch("{{ url_for('reset') }}");
-            window.location.href = "{{ url_for('live') }}";
+        const socket = io();
+        
+        socket.on('connect', function() {
+            console.log("Connected to WebSocket");
+        });
+        
+        socket.on('game_update', function(data) {
+            updateGameUI(data);
+            
+            if (!data.game_over) {
+                setTimeout(() => {
+                    socket.emit('next_generation');
+                }, 1000);
+            }
+        });
+        
+        // Функция updateGameUI остается без изменений
+        
+        // Запуск игры
+        $(document).ready(function() {
+            // Принудительно запрашиваем первое состояние
+            socket.emit('next_generation');
         });
     </script>
-    {% endif %}
 {% endblock %}
