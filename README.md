@@ -49,3 +49,5 @@
 - Python 3.12
 - Flask 3.1
 - HTML5/CSS3
+
+[🎮 Игра Жизнь на Flask](https://github.com/user-aefimov/game_life) 
