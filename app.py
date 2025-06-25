@@ -48,19 +48,9 @@ def index():
 def live():
     # Получаем экземпляр (создаем переменную game)
     game = GameOfLife()
-    game_over_message = None
-
     # Проверяем состояние игры ДО обновления поколения
     game_over_message = game.is_game_over()
-    # Обновляем только если игра активна
-    if not game_over_message:
-        if game.generation > 0:
-        # Генерируем новое поколение
-            game.form_new_generation()
-    # Увеличиваем счётчик в представлении
-        game.generation += 1
-    # Проверяем состояние игры ПОСЛЕ обновления
-        game_over_message = game.is_game_over()
+    
     # Передаем объект в шаблон
     return render_template("live.html",
                            game=game,
