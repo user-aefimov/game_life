@@ -63,20 +63,6 @@ def reset():
     game.reset()  # выполняет сброс состояния
     return jsonify(success=True)
 
-# Вспомогательная функция для расчета изменений
-def get_world_changes(world, old_world):
-    changes = []
-    for i in range(len(world)):
-        for j in range(len(world[i])):
-            if world[i][j] != old_world[i][j]:
-                changes.append({
-                    'x': i, 
-                    'y': j, 
-                    'state': world[i][j],
-                    'was_alive': old_world[i][j] == 1
-                })
-    return changes
-
 @app.route('/api/game-state')
 def game_state():
     game = GameOfLife()
