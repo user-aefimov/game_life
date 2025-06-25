@@ -1,4 +1,4 @@
-from flask import Flask, render_template, request, redirect, url_for
+from flask import Flask, render_template, request, redirect, url_for, jsonify
 from game_of_life import GameOfLife
 
 
@@ -51,6 +51,30 @@ def reset():
     game.reset()  # выполняет сброс состояния
     return redirect(url_for ('live')) # Перенаправляет на live.html
 
+@app.route('/api/game-state')
+def game_state():
+    game = GameOfLife()
+    return jsonify({
+        'world': game.world,
+        'old_world': game.old_world,
+        'generation': game.generation,
+        'game_over': bool(game.is_game_over()),
+        'message': game.is_game_over() or ""
+    })
+
+@app.route('/api/next-generation')
+def next_generation():
+    game = GameOfLife()
+    if not game.is_game_over():
+        game.form_new_generation()
+        game.generation += 1
+    return jsonify({
+        'world': game.world,
+        'old_world': game.old_world,
+        'generation': game.generation,
+        'game_over': bool(game.is_game_over()),
+        'message': game.is_game_over() or ""
+    })
 
 if __name__ == '__main__':
     app.run(host='0.0.0.0', port=5000, debug=True)
