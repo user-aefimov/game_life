@@ -5,14 +5,16 @@ from flask_socketio import SocketIO, emit
 app = Flask(__name__)
 socketio = SocketIO(app, cors_allowed_origins="*")
 
-# Обработчик WebSocket
-@socketio.on('connect')
-def handle_connect():
+# Обработчики WebSocket
+@socketio.on('request_update')
+def handle_update_request():
     game = GameOfLife()
     emit('game_update', {
         'world': game.world,
+        'old_world': game.old_world,
         'generation': game.generation,
-        'game_over': bool(game.is_game_over())
+        'game_over': bool(game.is_game_over()),
+        'message': game.is_game_over() or ""
     })
 
 @socketio.on('next_generation')
@@ -23,9 +25,11 @@ def handle_next_generation():
         game.generation += 1
     emit('game_update', {
         'world': game.world,
+        'old_world': game.old_world,
         'generation': game.generation,
-        'game_over': bool(game.is_game_over())
-    }, broadcast=True)
+        'game_over': bool(game.is_game_over()),
+        'message': game.is_game_over() or ""
+    })
 
 @app.route('/', methods=['GET', 'POST'])
 def index():
