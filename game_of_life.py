@@ -117,17 +117,11 @@ class GameOfLife(metaclass=SingletonMeta):
         # Условие 3: Проверка периодических состояний (осцилляторов)
             # Улучшенная проверка осцилляторов
         if self.generation > 5 and self.state_hash:
-            # Проверяем, встречалось ли текущее состояние в истории
+            # Проверяем, встречалось ли текущее состояние (хеш) в истории
             count_occurrences = self.state_history.count(self.state_hash)
             if count_occurrences > 1:
                 return f"Обнаружен осциллятор (повторение {count_occurrences} раз)!"
 
-        # if self.generation > 10:
-        #     # Проверяем последние 3 состояния
-        #     current_hash = hash(str(self.world))
-        #     if len(self.state_history) > 3 and current_hash in self.state_history[:-2]:
-        #         return "Обнаружен осциллятор! Игра окончена."
-            
         # Обновляем историю состояний
         # self.state_history = (self.state_history + [current_hash])[-4:]
         
