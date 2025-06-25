@@ -61,12 +61,53 @@
 
 {% block scripts %}
     {{ super() }}
+    <script src="https://code.jquery.com/jquery-3.6.0.min.js"></script>
     <script src="https://cdnjs.cloudflare.com/ajax/libs/socket.io/4.0.1/socket.io.js"></script>
     <script>
         const socket = io();
         
+        // Функция обновления интерфейса
+        function updateGameUI(data) {
+            // Обновляем счётчик поколений
+            $('.generation-counter').text('Поколение: ' + data.generation);
+            
+            // Обновляем статус игры
+            if (data.game_over) {
+                $('.game-status').html('<div class="game-over">' + data.message + '</div>');
+                $('.restart-prompt').show();
+            } else {
+                $('.game-status').html('<div class="game-active">Игра продолжается</div>');
+            }
+            
+            // Обновляем игровое поле
+            updateWorldTable(data.world, data.old_world);
+        }
+
+        // Функция обновления таблицы мира
+        function updateWorldTable(world, oldWorld) {
+            var table = $('.world');
+            table.empty();
+            
+            for (var i = 0; i < world.length; i++) {
+                var row = $('<tr>');
+                for (var j = 0; j < world[i].length; j++) {
+                    var cell = $('<td class="cell">');
+                    
+                    if (world[i][j] === 1) {
+                        cell.addClass('living-cell');
+                    } else if (oldWorld[i][j] === 1) {
+                        cell.addClass('dead-cell');
+                    }
+                    
+                    row.append(cell);
+                }
+                table.append(row);
+            }
+        }
+        
         socket.on('connect', function() {
             console.log("Connected to WebSocket");
+            socket.emit('request_update');
         });
         
         socket.on('game_update', function(data) {
@@ -79,12 +120,18 @@
             }
         });
         
-        // Функция updateGameUI остается без изменений
-        
-        // Запуск игры
+        // Обработка кнопки новой игры
+        $('.refresh').click(function(e) {
+            e.preventDefault();
+            $.post("{{ url_for('reset') }}", function() {
+                location.reload();
+            });
+        });
+
+        // Инициализация при загрузке
         $(document).ready(function() {
-            // Принудительно запрашиваем первое состояние
-            socket.emit('next_generation');
+            // Первый запрос состояния
+            socket.emit('request_update');
         });
     </script>
 {% endblock %}
