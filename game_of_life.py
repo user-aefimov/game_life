@@ -129,7 +129,7 @@ class GameOfLife(metaclass=SingletonMeta):
         #         return "Обнаружен осциллятор! Игра окончена."
             
         # Обновляем историю состояний
-        self.state_history = (self.state_history + [current_hash])[-4:]
+        # self.state_history = (self.state_history + [current_hash])[-4:]
         
         # Условие 4: достигнуто максимальное число поколений
         if self.generation >= 100:
