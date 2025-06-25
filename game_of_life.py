@@ -30,10 +30,14 @@ class GameOfLife(metaclass=SingletonMeta):
 
     def get_height(self):
         return self.__height
-
+    # Вместо полного массива передаем только изменения
+    
     def form_new_generation(self):
-        curent_hash = hash(str(self.world))
-        self.state_history.append(curent_hash)
+        # curent_hash = hash(str(self.world))
+        # self.state_history.append(curent_hash)
+        # Перед обновлением сохраняем хеш состояния
+        self.state_hash = self.calculate_state_hash()
+        self.state_history.append(self.state_hash)
         if len(self.state_history) > 10:
             self.state_history.pop(0)
         self.old_world = copy.deepcopy(self.world)
@@ -56,7 +60,11 @@ class GameOfLife(metaclass=SingletonMeta):
                     continue
                 new_world[i][j] = 0
         self.world = new_world
-        
+
+    def calculate_state_hash(self):
+        """Вычисляет хеш состояния мира"""
+        return hash(tuple(tuple(row) for row in self.world))   
+     
     def reset(self):
         """Сброс игры к начальному состоянию"""
         self.world = self.generate_universe()
@@ -107,14 +115,21 @@ class GameOfLife(metaclass=SingletonMeta):
             return "Мир стабилизировался! Игра окончена."
         
         # Условие 3: Проверка периодических состояний (осцилляторов)
-        if self.generation > 10:
-            # Проверяем последние 3 состояния
-            current_hash = hash(str(self.world))
-            if len(self.state_history) > 3 and current_hash in self.state_history[:-2]:
-                return "Обнаружен осциллятор! Игра окончена."
+            # Улучшенная проверка осцилляторов
+        if self.generation > 5 and self.state_hash:
+            # Проверяем, встречалось ли текущее состояние в истории
+            count_occurrences = self.state_history.count(self.state_hash)
+            if count_occurrences > 1:
+                return f"Обнаружен осциллятор (повторение {count_occurrences} раз)!"
+
+        # if self.generation > 10:
+        #     # Проверяем последние 3 состояния
+        #     current_hash = hash(str(self.world))
+        #     if len(self.state_history) > 3 and current_hash in self.state_history[:-2]:
+        #         return "Обнаружен осциллятор! Игра окончена."
             
-            # Обновляем историю состояний
-            self.state_history = (self.state_history + [current_hash])[-4:]
+        # Обновляем историю состояний
+        self.state_history = (self.state_history + [current_hash])[-4:]
         
         # Условие 4: достигнуто максимальное число поколений
         if self.generation >= 100:
