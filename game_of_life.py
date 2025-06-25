@@ -23,6 +23,7 @@ class GameOfLife(metaclass=SingletonMeta):
         self.old_world = copy.deepcopy(self.world)
         self.generation = 0
         self.state_history = []  # Добавить в инициализатор, истории состояния игры
+        self.state_hash = None
 # Новые публичные методы
 
     def get_width(self):
